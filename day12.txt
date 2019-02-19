@@ -1,0 +1,290 @@
+2018   09.18   星期二  
+
+
+
+
+装饰器 decorator(专业提高篇)
+  作用:
+    通常在不改变原函数的情况下,改变或添加原函数功能
+  什么是装饰器:
+    装饰器是一个函数,通常用来包装另一个函数或类(后面会讲)
+
+函数装饰器
+  是指装饰器函数,传入的是函数,返回的也是函数
+  语法:
+    def 装饰器函数名(形参):
+        语句块
+        return 函数对象
+
+    @装饰器函数名
+    def 函数名(形参列表):
+        语句块
+  示例：
+    # 以下函数是装饰器函数,fn用来绑定被装饰函数
+    def mydeco(fn):
+        def fx():
+            print("---这是fn被调用之前-----")
+            fn()
+            print("---这是fn被调用之后-----")
+        return fx
+
+    @mydeco
+    def myfunc():
+        print("myfunc被调用")
+    # 以上@mydeco等同于在def myfunc之后加了
+    # 如下语句
+    # myfunc=mydeco(myfunc)
+    myfunc()
+    myfunc()
+    myfunc()
+---这是fn被调用之前-----
+myfunc被调用
+---这是fn被调用之后-----
+---这是fn被调用之前-----
+myfunc被调用
+---这是fn被调用之后-----
+---这是fn被调用之前-----
+myfunc被调用
+---这是fn被调用之后-----
+
+
+示例：
+# 此装饰器用来增加权限验证功能
+def privileged_check(fn):
+    def fx(n,x):
+        print("正在进行权限验证....")
+        fn(n,x)
+    return fx
+
+# 此装饰器用来增加短消息提醒功能
+def message_send(fn): 
+    def fx(n,x):
+        fn(n,x)
+        print("正在发送短消息给",n,'...')
+    return fx 
+    
+@message_send
+@privileged_check
+def save_money(name,x):
+    print(name,'存钱',x,'元')
+
+@message_send
+@privileged_check
+def withdraw(name,x):
+    print(name,'取钱',x,'元')
+
+save_money('小王',200)
+save_money('小赵',400)
+withdraw('小李',500)
+    
+    
+函数的文档字符串
+  函数内第一次未赋值给任何变量的字符串是函数的文档字符串
+  语法:
+    def 函数名(参数列表):
+        "函数的文档字符串"
+        函数语句块
+  示例:
+    def cba():
+        """---文档字符串"""
+        pass
+    >>>help(cba)
+    print(cba)
+
+函数的__doc__属性
+  __doc__属性用于记录函数的文档字符串
+  如:
+    print(cba.__doc__) # "---文档字符串"
+
+函数定义语句(def语句)的完整语法:
+  [@装饰器名1]
+  [@装饰器名2]
+  [...]
+  def 函数名([位置形参],[*元组形参],[命名关键字
+  形参],[**字典形参]):
+      "文档字符串"
+      语句块
+面试题：
+  L=[1,2]
+  def f(n,lst=[]): # 列表是可变的容器
+      '''lst绑定的列表[]会在def语句创建时创建
+      且和f绑定的函数一同存在'''
+      lst.append(n)
+      print(lst)
+  f(3,L) # [1,2,3]
+  f(4,L) # [1,2,3,4]
+  f(100) # [100]
+  f(200) # [100,200]
+
+解决方法：
+  def f(n,lst=None):
+      if lst is None:
+          lst=[] 
+      lst.append(n)
+      print(lst)
+  f(100) # [100]
+  f(200) # [200]
+  
+
+模块 Module
+  什么是模块:
+    模块是一个包含有一系列数据,函数,类等组成的程序组
+    模块是一个文件,模块文件名通常以.py结尾
+  作用:
+    让一些相关的数据,函数,类等有逻辑的组织在一起,使逻辑
+    结构更加清晰
+    模块中的数据,函数和类等可提供给其它模块或程序使用
+  模块的分类:
+    1.内置模块,在解析器内部可以直接使用(通常用c语言编写)
+    2.标准库模块,安装python时已安装,且可以直接使用
+    3.第三方模块(通常为开源,需要自己安装)
+      $ pip3 install 模块名(安装)
+    4.用户自己编写的模块(也可以作为其它人的第三方模块)
+
+模块的导入语句:
+  import 语句:
+    语法:
+      import 模块名1[as 模块新名1],
+             模块名2[as 模块新名2],...
+    作用:
+      将某模块整体导入到当前模块中
+    用法:
+      模块名.属性名
+    如:
+      import math
+      print(math.factorial(5)) #5的阶乘
+      print('圆周率',math.pi)
+
+dir(obj)函数,可以返回模块内所有属性的字符串列表
+help(模块名)  可以查看模块相关的文档字符串
+
+练习：
+  1.输入一个圆的半径，打印出这个圆的面积
+  2.输入一个圆的面积，打印出这个圆的半径
+    (要求用math模块内的函数和数据)
+答案：
+  import math #导入数学模块
+  r=float(input('输入圆的半径：'))
+  area=math.pi*r**2
+  print('这个圆的面积是：',area)
+
+  s=float(input('输入圆的面积：'))
+  r=math.sqrt(s/math.pi)
+  print('这个圆的半径是：',r)
+  ----------------------------------
+  import math as m # 导入数学模块
+  r=float(input('输入圆的半径：'))
+  area=m.pi*r**2
+  print('这个圆的面积是：',area)
+
+  s=float(input('输入圆的面积：'))
+  r=m.sqrt(s/m.pi)
+  print('这个圆的半径是：',r)
+
+
+from import 语句
+  语法:
+    from 模块名 import 模块属性名1 [as 属性新名1],
+                      模块属性名2 [as 属性新名2] 
+  作用:
+    将某个模块的一个或多个属性导入到当前模块的作用域
+  示例:
+    from math import sin 
+    from math import pi,e,cos
+    from math import factorial as fac
+    print(sin(pi/2))*fac(5))
+
+from import * 语句 
+  语法:
+    from 模块名 import *
+  作用:
+    将某模块的所有属性导入到当前模块
+  示例:
+    from math import *
+    print(sin(pi/2))
+    print(factorial(5))
+
+dir 函数:
+  dir([对象]) 返回一个字符串列表
+  作用:
+    1.如果没有参数,则返回当前作用域内所有变量的列表
+    2.如果给定一个对象作为参数,则返回这个对象的所有变量的列表
+      1.对于一个模块,返回这个模块的全部变量
+      2.对于一个类,返回类的所有类变量,并递归基类对象的所有变量
+      3.对于其它对象返回所有变量,类变量和基类变量
+
+数学模块  math 
+  模块名:math 
+    import math 
+    from math import sin,cos,pi
+    from math import *
+  参见文档
+    
+
+时间模块 time  
+  模块名:time
+  参见文档 
+
+系统模块 sys 
+  运行时系统相关的信息 
+  模块名:sys
+
+练习:
+  1.编写函数fun,其功能是计算下列多项式的和
+    f(n)=1+1/1!+1/2!+1/3!+...+1/n!
+    当n等于20时,求函数的值
+答案：
+#1
+from math import factorial as fac
+def f(n):
+    s=0
+    for x in range(n+1):
+        s+=1/fac(x)
+    return s
+print("f(20)=",f(20))
+#2
+def f(n):
+    s=sum(map(lambda x:1/fac(x),range(n+1)))
+    return s
+print("f(20)=",f(20))
+
+  2.写一个程序,以电子时钟格式显示时间:
+    格式为:
+    HH:MM:SS   15:58:26
+答案：
+import time
+def clock_run():
+    while True:
+        # 拿到当前时间元组
+        t=time.localtime()
+        print("%02d:%02d:%02d"
+               %(t[3],t[4],t[5]),end='\r')
+               # t[3:6]=(t[3],t[4],t[5])
+        # '\r' 回车,回到当前行的行首,而不会换到下一行 
+        # 如果接着输出的话,本行以前的内容会被逐一覆盖
+        # '\n' 换行,换到当前位置的下一行,而不会回到行首
+        time.sleep(1)
+clock_run()
+
+  3.编写一个闹钟程序,启动时设置定时时间,到时间后打印
+    时间到,然后退出程序
+答案：
+import time
+def alarm(h,m):  # h,小时 m,分钟
+    print("设置事件为:%02d:%02d"%(h,m))
+    while True:
+        # 得到当前时间的小时和分钟
+        # t=time.localtime()[3:5]
+        t=time.localtime()
+        # 判断时间
+        if t[3:5]==(h,m):
+            print("时间到")
+            break
+        # 显示时间
+        print("%02d:%02d:%02d"%t[3:6],end='\r')
+        # 睡一秒,节省cpu占有内存
+        time.sleep(1)
+
+hour=int(input("请输入小时："))
+minute=int(input("请输入分钟："))
+alarm(hour,minute)

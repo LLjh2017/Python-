@@ -1,0 +1,351 @@
+2018     9.21    星期五
+
+
+
+
+生成器 Generator (python2.5之后)
+  生成器是能够动态提供数据的可迭代对象
+  生成器是在运行时生成数据,与容器类不同,它通常不会在内存中
+  保存大量的数据,而是现用现生成
+
+生成器有两种
+  1.生成器函数
+  2.生成器表达式
+生成器函数：
+  含有yield语句的函数是生成器函数,此函数被调用将返回一个
+  生成器对象
+  yield 翻译为(产生或生产)
+
+yield 语句　
+  语法：　
+    yield 表达式
+  说明：
+    yield 用于def 函数中,目的是将此函数作为生成器函数使用
+    yield 用来生成数据,供迭代器next(it)函数取值
+
+生成器函数说明
+  1.生成器函数调用将返回一个生成器对象,生成器对象是可迭代对象
+  2.在生成器函数内调用return语句会触发一个StopIteration异常
+    (即生成数据结束)
+
+练习：
+  写一个生成器函数 myeven(start,stop)用来生成从start开始到
+  stop结束区间内的一系列的偶数(不包含stop)
+答案：
+def myeven(start,stop):
+    for x in range(start,stop):
+        if x%2==0:
+            yield x
+
+evens=list(myeven(10,20))
+print(evens)
+for x in myeven(5,10):
+    print(x)
+L=[x for x in myeven(0,10)]
+print(L)
+
+
+生成器表达式
+  语法：　　
+    (表达式 for 变量 in 可迭代对象 ［if 真值表达式］)
+  说明：
+    if 子句可以省略
+  作用：
+    用推导式形式创建一个新的生成器
+  示例：
+    gen=(x**2 for x in range(1,5))
+    it=iter(gen)
+    next(it)  # 1
+    next(it)  # 4
+    next(it)  # 9
+    next(it)  # 16
+    next(it)  # StopIteration
+练习：
+  已知有列表
+    L=[2,3,5,7,10,15]
+  1.写一个生成器函数,让此函数能动态提供数据,数据为原列表
+    的数字的平方+1
+    L=[2,3,5,7,10,15]
+    def mygen_fun(lst):
+        for x in lst:
+            yield x**2+1
+    L2=list(mygen_fun(L))
+    print(L2)
+  2.写一个生成器表达式,让此表达式能动态提供数据,数据依旧
+    为原列表数字的平方+1
+    L=[2,3,5,7,10,15]
+    L3=list((x**2+1 for x in L))
+    print(L3)
+  3.生成一个列表,此列表内的数据为原列表的数字的平方+1
+    L=[2,3,5,7,10,15]
+    L4=[x**2+1 for x in L]
+    print(L4)
+
+练习：
+  1.写一个生成器函数,给出开始值begin,和终止值end
+    此生成器函数生成begin~end范围内的全部素数(不包含end)
+答案：
+def primes(begin,end):
+    for x in range(begin,end):
+        for i in range(2,x):
+            if x%i==0:
+                break
+        else:
+            yield x
+L=list(primes(10,20))
+print(L)
+
+# 写一个函数判断x是否是素数
+def is_prime(x):
+    if x<2:
+        return False
+    for i in range(2,x):
+        if x % i==0:
+            return False
+    return True
+def primes(begin,end):
+    for x in range(begin,end):
+        # 如果x是素数，则用yield把这个送回给调用者
+        if is_prime(x):
+            yield x
+L=list(primes(10,20))
+print(L)
+
+
+
+迭代工具函数
+  用来生成一个个性化的可迭代对象
+
+函数 说明 
+  zip(iter1[,iter2,...])返回一个zip生成器对象,此对象
+  用于生成元组,元组的数据分别来自于参数中的每个可迭代对象
+  生成元组的个数由最小的可迭代对象大小决定
+  
+  enumerate(iterable,start=0)返回一个enumerate生成器
+  对象,此对象生成类型为(索引,值)的元组,默认索引从零开始,
+  也可以用start指定
+
+  示例:
+    numbers=[10086,10000,10010,95588]
+    names=['中国移动','中国电信','中国联通']
+    zip(numbers,names)
+    for t in zip(numbers,names):
+    print(t)
+
+zip函数的实现(用生成器函数实现)
+
+示例：
+numbers=[10086,10000,10010,95588]
+names=['中国移动','中国电信','中国联通']
+def myzip(iter1,iter2):
+    # 先拿到两个对象的迭代器
+    it1 = iter(iter1)
+    it2 = iter(iter2)
+    while True:
+        try:
+            a=next(it1)
+            b=next(it2)
+            yield (a,b)
+        except StopIteration:
+            return # 此生成器函数生成结束       
+for t in myzip(numbers,names):
+    print(t)
+d=dict(myzip(numbers,names))
+print(d)
+
+练习：
+  写一个程序，读入任意行的文字，当输入空行时结束输入
+  打印带有行号的输入结果
+  如：
+    请输入：tarena<回车>
+    请输入：china<回车>
+    请输入：holiday<回车>
+    请输入：<回车>
+  输出如下：
+    第1行：tarena
+    第1行：china
+    第1行：holiday
+答案：
+def get_input_text():
+    # 输入一些文字，形成列表后返回
+    L=[]
+    while True:
+        s=input('请输入:')
+        if not s:
+            return L
+        L.append(s)
+
+def print_text_with_number(L):
+    for t in enumerate(L,1):
+        print("第%d行：%s"%t)
+
+L=get_input_text()
+print_text_with_number(L)
+
+
+
+字节串和字节数组
+  回顾:
+    序列:
+      列表,元组,字符串,字节串,字节数组
+字节串(也叫字节序列) bytes
+  作用:
+    存储以字节为单位的数据
+  说明:
+    字节串是不可改变的序列
+字节 byte :
+  字节是0~255之间的整数,用来表示字节的取值
+位 bit :
+    1byte=8bit
+
+创建空字节串的字面值
+  b''
+  b""
+  b''''''
+  b""""""
+创建非空的字节串字面值
+  b'ABCD'               #  b'ABCD'
+  b"ABCD"               #  b'ABCD'
+  b'\x41\x42\x43\x44'   #  b'ABCD'
+  b'hello'
+  b''   里面不能是中文
+
+字节串构造函数 bytes 
+  bytes()   生成一个空的字节串,等同于b''
+  bytes(整型可迭代对象)   用可迭代对象初始化一个字节串
+  bytes(整数n)  生成n个值为0的字节串
+  bytes(字符串,encoding='utf-8') 用字符串的转换编码
+                                生成一个字节串
+  示例:
+    b=bytes()               #  b=b''
+    b=bytes(range(65,70))   #  b=b'ABCDE'
+    b=bytes(5)              #  b=b'\x00\x00\x00\x00\x00'
+    b=bytes('ABC','utf-8')  #  b=b'ABC'
+    b=bytes('中文','utf-8')  #  ....... 
+
+bytes 的运算:
+  同其它的序列的运算规则相同
+    +  +=  *  *=
+    <  <=  >  >=  ==  !=
+    in / not in 
+    索引(得到的是整型数0~255)  #不支持索引赋值
+    切片
+
+能用于字节串和字节数组的函数:
+  len(x)  min(x)  max(x) 
+  sum(x)  any(x)  all(x)
+
+bytes 和 str 的区别:
+  bytes 存储字节(字节是0~255之间的整数)
+  str   存储unicode字符(字符是0~65536的整数)
+
+bytes 与 str 转换
+          编码(encode)
+    str------------------>bytes
+      b=s.encode(encoding='utf-8')
+
+          解码(decode)
+    bytes------------------>str
+      s=b.decode(encoding='utf-8')
+  示例:
+    s='我是中文'
+    b=s.encode('utf-8')
+    s2=b.decode('utf-8')
+
+字节数组 bytearray
+  可变的字节序列
+字节数组的构造函数 bytearray
+  bytearray()  生成一个空的字节数组 
+  bytes(整型可迭代对象)  # 用可迭代对象初始化一个字节数组
+  bytes(整数n)  生成n个值为0的字节数组
+  bytes(字符串,encoding='utf-8') 用字符串的转换编码生成
+                                一个字节数组
+
+运算规则和序列完全相同
+     
+  +  +=   *  *=
+  <  <=  >  >=  ==   !=
+  in / not in 
+  索引
+  字节数组支持索引和切片的赋值操作,规则同列表的赋值规则
+  完全相同
+  切片
+
+练习:
+  有一个bytearray字节数组
+  ba = bytearray(b'a1b2c3d4')
+  如何得到字节串b'1234'和b'abcd'
+  将上述字节数组改为:
+    ba = bytearray(b'A1B2C3D4')
+答案：
+  ba = bytearray(b'a1b2c3d4')
+  b1 = ba[1::2]  # b1=bytearray(b'1234')
+  b1 = bytes(b1) # b1=b'1234'
+  b2 = ba[::2]  # b2=bytearray(b'abcd')
+  b2 = bytes(b2) # b2=b'abcd'
+
+  ba[::2]=range(65,69)
+  ba = bytearray(b'A1B2C3D4')
+
+
+练习 :
+  1.打印 9 9 乘法表
+答案：
+for line in range(1,10):
+    # 每循环一次打印一行
+    for col in range(1,line+1):
+        print("%dx%d=%d "%(col,line,col*line),end='')
+    print() # 一行完成换行
+
+  2.写一个生成器函数 myxrange(start,stop,step),来生成
+    一系列整数
+    要求功能与range完全相同
+    不允许调用range函数和列表
+    然后用自己写的myxrange函数求1~100内奇数的平方和
+答案：
+def myxrange(start,stop=None,step=1):
+    # 调用开始和结束的值
+    if stop is None:
+        stop=start
+        start=0
+    # 正向生成
+    if step>0:
+        while start<stop:
+            yield start # 生成当前值
+            start+=step
+    elif step<0:
+        while start>stop:
+            yield start
+            start+=step # 加上一个负数
+L=[x**2 for x in myxrange(1,101,2)]
+print(L)
+print(sum(L))
+
+  3.写一个myfilter生成器函数,功能与filter函数功能完全相同
+    如:
+      def  myfilter(fn,iter1):
+      L=[x for x in myfilter(lambda x:x%2,range(10))]
+      L=[1,3,5,7,9]
+答案：
+def myfilter(fn,iter1):
+    for item in iter1:
+        if fn(item)==True:
+            yield item
+L=[x for x in myfilter(lambda x:x%2,range(10))]
+print(L)
+
+  4.请尝试用filter()删除1~100的素数
+    1.一个函数判断n是否为素数
+    2.列表生成式生成1~100的素数
+答案：
+def is_prime(n):
+    a=0
+    for i in range (2,n):
+        if (n%i==0):
+            a=1
+    if a==0:
+        return True
+    else:
+        return False
+L=[x for x in filter(is_prime,[i for i in range(2,101)])]
+print(L)

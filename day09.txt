@@ -1,0 +1,495 @@
+2018   09.13   星期四
+
+
+
+
+函数的参数：
+  1.函数实际调用参数传递(把数据给函数)
+  2.函数的形式参数(从调用者拿来的数据)
+
+函数的实际调用参数传递
+  传递方式：
+    1.位置传参
+      1.1 序列传参
+  2.关键字传参
+      2.2 字典关键字传参
+
+位置传参：
+  实际参数(实参)的对应关系与形式参数(形参)的对应关系是按
+  位置来依次对应的
+  示例：
+    def mymin(a,b,c):
+        pass
+    #         ^ ^ ^
+    mymin(    1,2,3)
+  说明：
+    实参个数必须与形参的个数相同
+  示例：
+    def myfun(a,b,c):
+        print("a的值是:",a)
+        print("b的值是:",b)
+        print("c的值是:",c)
+    myfun(1,2,3)    # 1-->a  2-->b  3-->c
+    myfun(4,5,6)    # 4-->a  5-->b  6-->c
+
+序列传参：
+  序列：字符串,列表,元组
+  序列传参是指在函数调用过程中,用*(星号)将序列拆解后按
+  位置进行传递的传参方式
+  示例:
+    def myfun(a,b,c)
+        print("a的值是:",a)
+        print("b的值是:",b)
+        print("c的值是:",c)
+
+    s1=[11,22,33]
+    myfun(s1[0],s1[1],s1[2])
+    myfun(*s1)  相当于myfun(11,22,33)
+    s2=(44,55,66)
+    s3='ABC'
+    myfun(*s2) 
+    myfun(*s3)  
+
+  说明：
+    序列传参时,序列拆解的位置将与形参一一对应
+    序列的位置信息对应相应的参数位置
+
+关键字传参
+  关键字传参是指传参时,按着形参的名称给形参赋值
+  实参和形参按名称进行匹配
+  说明：
+  实参和形参可以不按位置进行匹配
+  示例：
+    def myfun(a,b,c)
+        print("a的值是:",a)
+        print("b的值是:",b)
+        print("c的值是:",c)
+    myfun(c=300,b=200,a=100)
+
+字典关键字传参
+  是指实参为字典,将字典用**(双星号)拆解后进行关键字传参
+  的传参方式
+  说明：
+    字典的键名和形参名必须一致
+    字典的键名必须是字符串,且必须为标识符的命名规则
+    字典的键名要在形参中存在
+  示例：
+    def myfun(a,b,c)
+        print("a的值是:",a)
+        print("b的值是:",b)
+        print("c的值是:",c)
+    d={'c'：33,'b':22,'a':11}
+    myfun(d['a'],d['b'],d['c'])
+    myfun(a=d['a'],b=d['b'],c=d['c'])
+    myfun(**d)    # 等同于 myfun(a=11,b=22,c=33)
+
+
+函数综合传参
+  函数的传参方式,在能确定形参能唯一匹配到相应实参的情况下
+  可以任意组合
+  函数的位置传参要先于关键字传参
+  1.函数的位置传参和序列传参可以混合使用,可以顺序颠倒
+    myfun(100,*[200,300])
+    myfun(*[100,200],300)
+    myfun(*[100],200,*[300])
+  2.函数位置传参和关键字传参可以混合使用
+    myfun(100,c=300,b=200)
+    myfun(100,**{"c":300},b=200)
+
+
+
+---------以下讲的是函数的定义及函数的形参-------
+
+
+函数的缺省参数
+  语法:
+    def 函数名(形参名1=默认实参1,形参名2=默认实参2,...):
+        语句块
+  示例：
+    def info(name,age=1,address="不详"):
+        print(name,"今年",age,'岁','家庭住址:',address)
+    info("魏明择",35,'北京市朝阳区')
+    info('Tarena',16)
+
+  说明：
+    1.缺省参数必须自右至左依次存在,如果一个参数有缺省
+      参数,则其右侧的所有参数必须由缺省参数
+    2.缺省参数可以由0个,1个或多个,甚至全部都是缺省参数
+  示例：
+    def fn(a,b=10,c):  # 错的
+        pass
+    def fn(a=0,b=10,c=20) # 对的
+        pass 
+
+练习:
+  写一个函数myadd,此函数可以计算两个数,三个数及四个数的和
+
+def myadd(a,b,c=0,d=0):
+    return a+b+c+d
+
+print(myadd(10,20))
+print(myadd(100,200,300))
+print(myadd(1,2,3,4))
+
+
+
+函数形参的定义方式
+  位置形参       def f1(a,b,c)
+  星号元组形参    def f1(a,b,*args)
+  命名关键字形参  def f1(a,*args,c)
+  双星号字典形参  def f1(**kwargs)
+
+位置形参：
+  语法：
+    def 函数名(形参名1,形参名2...)
+        语句块
+
+星号元组形参：
+  语法：
+    def 函数名(*元组形参名)：
+        语句块
+  作用：
+    收集多余的位置传参
+  说明：
+    元组形参名一般命名为'args'
+  示例：
+    def func(*args):
+        print("用户传入的参数个数是:",len(args))
+        print('args=',args)
+    func()
+    func(1,2,3)
+    func(1,2,3,"aa",'bbb')
+练习：
+  1.写一个函数,mysum可以传入任意个数字的实参,此函数调用将返回
+    实参的和
+def mysum(*args):
+    return sum(args)
+    # 第二种方法
+    s=0 # 求和
+    for i in args:
+        s+=i
+    return s 
+print(mysum())
+print(mysum(1,2,3))
+
+  2.写一个函数min_max(...)
+    此函数至少要传一个参数,并返回全部这些数的最小值
+    最大值(形成元组,最小值在前,最大值在后)
+    调用此函数,得到最大值和最小值并打印出来
+答案：
+def min_max(a,*args):
+    # 求最大
+    zuida=a
+    for i in args:
+        if i>zuida:
+            zuida=i
+    # 求最小
+    zuixiao=a
+    for j in args:
+        if zuixiao>j:
+            zuixiao=j       
+    return (zuixiao,zuida)
+print(min_max(10,20,30))
+x,y=min_max(8,6,4,3,9,2,1)
+print('最小值是:',x)
+print('最大值是:',y)
+print(min_max())  # 没有实参报错
+
+
+命名关键字形参：
+  语法：
+    def 函数名(*,命名关键字形参1,命名关键字形参2...):
+        语句块
+    # 或
+    def 函数名（*args,命名关键字形参1,命名关键字形参2...):
+        语句块
+  作用：
+    强制所有的命名关键字形参都必须用关键字传参或字典关键字传参
+  示例：
+    def fun(*,c,d): 
+        print('c=',c)
+        print('d=',d)
+
+    fun(3,4)      # 报错  
+    fun(d=4,c=3)  # 正确
+    d1={'c':30,'d':40}
+    fun(**d1)     # 正确
+
+
+双星号字典形参 
+  语法：
+    def 函数名(**字典形参名):
+        语句块
+  作用：
+    收集多余的关键字传参
+  说明：
+    字典形参名一般命名为"kwargs"
+  示例：
+    def fun(**kwargs):
+        print('关键字传参个数是',len(kwargs))
+        print('kwargs=',kwargs)
+
+    fun(a=1,b='BBBB',c=[2,3,4])
+
+函数的参数说明：
+  位置形参,星号元组形参,命名关键字形参,双星号字典形参
+  缺省参数可以混合使用
+
+函数参数自左至右的顺序为：
+  位置形参
+  星号元组形参
+  命名关键字形参
+  双星号字典形参
+  示例：
+    def fn(a,b,*args,c,d,**kwargs):
+        pass
+    fn(1,2,3,4,5,c='C',d='D',e='E')
+
+可以接收任意的位置传参和关键字传参的函数
+  def fn(*args,**kwargs):
+      print('args=',args)
+      print('kwargs=',kwargs)
+
+思考题：
+  查看
+    >>>help(print)
+    猜想print()函数的形参列表是如何定义的?
+    猜想range()函数的形参列表是如何定义的?
+def myprint(*args,sep=" ",end='\n'):
+    print(*args,sep=sep,end=end)
+
+myprint()
+myprint(1,2,3,4)
+myprint(1,2,3,4,sep='#')
+myprint(1,2,3,4,sep='#',end='\n\n')
+myprint('================')
+  
+练习：
+  写一个myrange函数，参数可以传入1-3个，实际含义与
+  range函数相同
+  此函数的返回符合range(...)函数的列表
+  如：
+    L=myrange(4)
+    print(L) # [0,1,2,3]
+    L=myrange(4,6)
+    print(L) # [4,5]
+    L=myrange(1,10,3)
+    print(L) # [1,4,7]  
+    (注：可以调用range函数)
+答案:  
+def myrange(a,b=None,c=None):
+    if b is None:
+        start=0
+        stop=a
+    else:
+        start=a
+        stop=b
+    if c is None:
+        step=1
+    else:
+        step=c
+    return list(range(start,stop,step))
+L=myrange(4)
+print(L)
+L=myrange(4,6)
+print(L)
+L=myrange(1,10,3)
+print(L)
+
+
+全局变量和局部变量
+局部变量：
+  定义在函数内部的变量称为局部变量(函数的形参也是
+  局部变量)
+  局部变量只能在函数内部使用
+  局部变量在函数调用时才能够被创建,在函数调用之后会
+  自动销毁
+
+全局变量：
+  定义在函数外部,模块文件内部的变量称为全局变量
+  全局变量,所有的函数都可以直接访问(但不能直接将其
+  赋值)
+
+  说明：
+    1.在函数内部的赋值语句会创建局部变量,不会对全局变量造成影响
+    2.局部变量只能在其被声明的函数内部访问,而全局变量可以在整个
+      模块范围内访问
+
+globals() 和 locals() 函数
+  globals()  返回当前全局作用域内变量的字典
+  locals()   返回当前局部作用域内变量的字典
+示例：
+a=1
+b=2
+c=3
+def fn(c,d):
+    e=300
+    print(c)  # 访问局部变量100
+    print(globals()['c']) # 访问全局变量3
+
+fn(100,200)
+
+
+练习：
+  素数/质数
+    2,3,5,7,11,13
+  1.写一个函数isprime(x),判断x是否是素数,如果是返回True
+    否则返回False
+    def isprime(x):
+    ...
+    print(isprime(4))   # False
+    print(isprime(5))   # True
+答案：
+def isprime(x):
+    # 如果x小于2不是素数
+    if x<2:
+        return False
+    # 如果x大于等于2,则用x对2～x-1的数求余
+    for i in range(2,x):
+        # 如果余数为0则不是素数
+        if x%i==0:
+            return False  
+    # 否则就为素数  
+    return True    
+print(isprime(4))   # False
+print(isprime(5))   # True
+
+  2.写一个函数prime_m2n(m,n),返回从m开始到n结束的范围内的
+    素数(不包含n),返回这些素数的列表,并打印
+    如：
+      L=prime_m2n(5,10)
+      print(L)    #  [5,7]
+答案：
+#老师的方法 调用上一个判断函数是不是素数
+def isprime(x):
+    # 如果x小于2不是素数
+    if x<2:
+        return False
+    # 如果x大于等于2,则用x对2～x-1的数求余
+    for i in range(2,x):
+        # 如果余数为0则不是素数
+        if x%i==0:
+            return False  
+    # 否则就为素数  
+    return True 
+def prime_m2n(m,n):
+    L=[]
+    for x in range(m,n):
+        # 判断如果是素数就加到列表中
+        if isprime(x):
+            L.append(x)
+    return L
+L=prime_m2n(5,10)
+print(L)
+#第二种方法
+def prime_m2n(m,n):
+    l=[]
+    for x in range(m,n):
+        # 判断如果是素数就加到列表中
+        if x>2:
+            for i in range(2,x):
+                if x%i==0:
+                    break
+            else:
+                l.append(x)
+    return l
+L=prime_m2n(5,10)
+print(L)
+  3.写一个函数primes(n),返回指定范围n以内的素数(不包含n)
+    的全部素数的列表,并打印这些素数
+    如：
+      L=primes(10)
+      print(L)  #[2,3,5,7]
+    1.打印100以内的素数
+    2.打印200以内的全部素数的和
+#老师的方法
+def isprime(x):
+    # 如果x小于2不是素数
+    if x<2:
+        return False
+    # 如果x大于等于2,则用x对2～x-1的数求余
+    for i in range(2,x):
+        # 如果余数为0则不是素数
+        if x%i==0:
+            return False  
+    # 否则就为素数  
+    return True
+def primes(n):
+    #创建一个列表存放素数
+    l=[]
+    for i in range(n):
+        if isprime(i):
+            l.append(i)
+    return l
+L=primes(100)
+print(L)
+print(sum(primes(200)))
+#第二种方法
+def primes(n):
+    l=[]
+    a=0
+    for a in range(n):
+        for b in range(2,a):
+            if a%b==0:
+                break
+        else:
+            l.append(a) 
+    l.remove(0) 
+    l.remove(1)     
+    return l
+l=primes(100)
+print('100以内的素数:',l)
+l=primes(200)
+he=0
+for c in l:
+    he+=c
+print('200以内的全部素数的和:',he)
+
+  4.改写之前的学生信息管理程序：
+    改为用两个函数实现
+    1.写函数input_student()来获取学生信息
+      当输入学生姓名为空时结束输入,形成字典组成的列表
+      并返回
+    2.写函数print_student(L)将上述函数得到的打印成为
+      表格显示
+    如：
+      def input_student():
+      ...
+      def print_student(L):
+      ...
+      L=input_student()  # 获取列表
+      print(L)
+      print_student(L)   # 打印表格
+答案：
+def input_student():
+    L=[] #创建一个列表用来保存学生信息的字典
+    #循环输入学生姓名，年龄，成绩，姓名为空时结束输入
+    while True:
+        n=input('请输入学生姓名')
+        if not n: #姓名为空时结束输入
+            break
+        a=int(input('请输入年龄：'))
+        s=int(input('请输入成绩：'))
+        # 得到的数据形成字典
+        d={}
+        d['name']=n
+        d['age']=a
+        d['score']=s
+        #加到列表内
+        L.append(d)
+    return L
+def print_student(L):
+    print("+-------+---------+---------+")
+    line='|'+'name'.center(7)+'|'+'age'.center(9)+'|'
+    line+='score'.center(9)+'|'
+    print(line)
+    print("+-------+---------+---------+")
+    for d in L: #d绑定的是字典
+        line1='|'+d['name'].center(7)+'|'+str(d['age']).center(9)+'|'
+        line1+=str(d['score']).center(9)+'|'
+        print(line1)
+    print("+-------+---------+---------+")
+        
+L=input_student()  # 获取列表
+print(L)
+print_student(L) # 打印表格

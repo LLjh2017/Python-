@@ -1,0 +1,425 @@
+2018     09.26     星期三
+
+
+
+
+面向过程编程 
+  基本单位：函数
+
+面向对象编程 Object-Oriented Programming 
+  基本单位：类 class
+
+什么是对象
+  对象是指现实中的物体或实体
+
+什么是面向对象
+  把一切看成对象(物体或实体或实例),用各种对象之间的关系
+  来描述事务
+
+对象都有哪些特征
+  对象有很多属性(名词,形容词)
+    姓名,年龄,性别
+  对象有很多行为(动作,动词)
+    学习,吃饭,睡觉,踢球,工作
+
+什么是类
+  拥有相同属性和行为的对象分为一组即为一个类
+  类是用来描述对象的工具,用类可以创建此类的对象
+  示意:
+    车(是一个类) ------> BYD E6 (京A.88888)(对象)
+    狗(类) ----> 哈士奇(户籍号:0000001) 对象
+
+类的创建语句 class 语句
+  语法:
+    class 类名(继承列表):
+        '''类的文档字符串'''
+        实例方法
+        类变量
+        类方法(@classmethod)
+        静态方法(@staticmethod)
+  作用:
+    创建一个类
+    用于描述此类对象的行为和属性
+    类用于创建此类的一个或多个对象(实例)
+  说明:
+    类名必须是标识符
+    类名实质是变量,它在创建类时绑定一个类
+
+构造函数
+  调用表达式:
+    类名([创建传参列表])
+  作用:
+    创建这个类的实例对象,并返回此实例对象的引用关系
+  说明:
+    实例有自己的作用域和名字空间,可以为该实例添加实例
+    变量(也叫属性)
+
+实例方法(instance method)
+  定义语法:
+    class 类名(继承列表):
+        def 实例方法名(self,形参列表):
+            '''方法的文档字符串'''
+            语句块
+  作用:
+    用于描述一个对象的行为,让此类型的全部对象都拥有相同
+    的行为
+  说明:
+    1.实例方法的实质是函数,是定义在类内的函数
+    2.实例方法至少有一个形参,第一个形参绑定调用
+      这个方法的实例,一般命名为'self'
+  实例方法的调用语法:
+    实例.实例方法名(调用实参)
+    或
+    类名.实例方法名(实例,调用实参)
+
+实例属性(instance attribute)
+  每个实例都可以有自己的变量,称为实例变量(也叫属性)
+  使用语法:
+    实例.属性名
+  赋值规则:
+    首次赋值则创建此属性
+    再次赋值则改变此属性的绑定关系
+  作用:
+    记录每个对象自身的数据
+
+练习：
+  定义一个'人'类
+    class Human:
+        def set_info(self,name,age,adress='不详'):
+            '''此方法用来给人对象添加'姓名','年龄'和'家庭住址'
+            属性'''
+        def show_info(self):
+            '''显示此人的信息'''
+  调用方法如下:
+    s1=Human()
+    s1.set_info('小张',20,'深圳市南山区')
+    s2=Human()
+    s2.set_info('小李',18)
+    s1.show_info()
+    s2.show_info()
+答案：
+class Human:
+    def set_info(self,name,age,adress='不详'):
+        self.name=name
+        self.age=age
+        self.adress=adress      
+    def show_info(self):
+        print(self.name,self.age,'岁,家庭住址:',
+              self.adress)
+s1=Human()
+s1.set_info('小张',20,'深圳市南山区')
+s2=Human()
+s2.set_info('小李',18)
+s1.show_info()
+s2.show_info()
+
+
+
+del 语句用于删除实例属性
+  语法:
+    del 对象.实例变量
+
+del语句小结:
+  1.删除变量
+    del a,b,c
+  2.删除列表中的元素
+    del l[0]
+  3.删除字典的键值对
+    del d['score']
+  4.删除对象的属性
+    del obj.attr 
+
+初始化方法
+  作用:
+    对新创建的对象添加属性
+  格式:
+    class 类名(继承列表):
+        def __init__(self,形参列表):
+            语句块
+  说明:
+    1.初始化方法名必须为'__init__'不可改变
+    2.初始化方法会在构造函数创建实例后自动调用且将实例自身通过
+      第一个参数self传入'__init__"方法
+    3.构造函数的实参将通过__init__方法的形参列表传入到
+      '__init__'方法中 
+    4.初始化方法必须返回None
+
+练习：
+  写一个学生类 Student 类，此类用于描述学生信息
+    学生信息有：
+      姓名，年龄，成绩(默认为0)
+  1.为该类添加初始化方法，实现在创建对象时自动设置姓名，年龄
+    成绩属性
+  2.添加set_score方法，能为对象修改成绩信息
+  3.添加show_info方法打印学生信息
+
+答案：
+class Student:
+    def __init__(self,name,age,score=0):
+        self.name=name
+        self.age=age 
+        self.score=score
+    def set_score(self,score):
+        self.score=score
+    def show_info(self):
+        print(self.name,self.age,self.score)
+l=[]
+l.append(Student('小张',20,100))
+l.append(Student('小李',18))
+l.append(Student('小赵',19,85))
+for s in l:
+    s.show_info()
+l[1].set_score(70)
+for s in l:
+    s.show_info()
+
+析构方法:
+  class 类名(继承列表):
+      def __del__(self):
+          ....
+  作用:
+    在对象销毁前释放对象占用的资源
+  说明:
+    析构方法会在对象销毁前被自动调用
+    python语言建议不要在对象销毁时做任何事情,因为
+    销毁的时间难以确定
+
+预置实例属性(实例变量)
+  __dict__属性
+    此属性绑定一个存储此实例自身变量的字典
+  示例:
+    class Dog:
+        pass
+    dog1=Dog()
+    print(dog1.__dict__)  # {}
+    dog1.kinds='京巴'
+    print(dog1.__dict__)  # {'kinds': '京巴'}
+
+  __class__属性
+    __class__属性绑定创建此实例的类
+  作用:
+    可以借助于此属性来访问创建此实例的类
+  示例:
+    class Dog:
+        pass
+    dog1=Dog()
+    print(dog1.__class__) # <class '__main__.Dog'>
+    dog2=dog1.__class__()
+    print(dog2.__class__) # <class '__main__.Dog'>
+
+面向对象综合练习：
+  两个人：
+    1.姓名：张三，年龄：35
+    2.姓名：李四，年龄：8
+  行为：
+    教别人学东西 teach
+    赚钱 work
+    借钱 borrow
+    显示自己的信息 show_info
+  事情：
+    张三 教 李四 学 python
+    李四 教 张三 学 王者荣耀
+    张三 上班赚了 1000 元钱
+    李四 向 张三 借了 200 元钱
+    35 岁的 张三 有钱 800 元，他学会的技能是：王者荣耀
+    8 岁的 李四 有钱 200 元，他学会的技能是：python
+答案：
+class Human:
+    def __init__(self,name,age):
+        self.name=name # 姓名
+        self.age=age   # 年龄
+        self.money=0   # 钱数
+        self.skill=[]  # 技能
+    def teach(self,other,skill):
+        print(self.name,'教',other.name,'学',skill)
+        other.skill.append(skill)
+    def work(self,money):
+        print(self.name,'上班赚了',money,'元钱')
+        self.money+=money
+    def borrow(self,other,money):
+        if money>other.money:
+            print('借钱失败')
+        else:
+            print(self.name,'向',other.name,'借了'
+                  ,money,'元钱')
+            other.money-=money
+            self.money+=money
+    def show_info(self):
+        print(self.age,'岁的',self.name,'有钱',
+              self.money,'元，他学会的技能是：',
+              self.skill)
+zhang3=Human('张三',35)
+li4=Human('李四',8)
+zhang3.teach(li4,'python')
+li4.teach(zhang3,'王者荣耀') 
+zhang3.work(1000)
+li4.borrow(zhang3,200) 
+zhang3.show_info() 
+li4.show_info()
+
+用于类的函数:
+  isinstance(obj,class_or_tuple)返回对象obj是否是
+  某个类的对象或者某些类的一个类的对象,如果是返回True,
+  否则返回False
+  type(obj)  返回对象的类型
+  示例: 
+    isinstance(100,int)     # True
+    isinstance(3.14,int)    # False
+    class Dog:
+        pass
+    dog1=Dog()
+    isinstance(dog1,Dog)    # True
+    type(dog1)  is Dog      # True
+
+
+修改原学生管理项目
+  添加两个功能:
+    9.从文件中读取数据(si.txt)
+    10.保存信息到文件(si.txt)
+答案：
+def read_from_file():
+    L=[]
+    try:
+        f=open('si.txt','r')
+        for line in f:
+            line=line.strip() # 去掉\n
+            items=line.split(',')
+            n,a,s=items
+            a=int(a)
+            s=int(s)
+            L.append(dict(name=n,age=a,score=s))
+        f.close()
+    except OSError:
+        print('打开文件失败')
+    return L
+def save_to_file(L):
+    try:
+        f=open('si.txt','w')
+        for d in L:
+            f.write(d['name'])
+            f.write(',')
+            f.write(str(d['age']))
+            f.write(',')
+            f.write(str(d['score']))
+            f.write('\n')
+        f.close()
+        print('保存成功')
+    except OSError:
+        print('保存文件失败')
+
+第一阶段面试题
+1.continue 和 break 有什么区别？
+  1.break是终止循环,跳出循环语句(只能跳出一层循环语句)
+     break之后的语句不会执行
+  2.continue是跳过本次循环剩下的语句,重新开始下一次循环
+    区别:continue终止本次循环,break完全终止循环
+
+2. Python 中的作用域？
+   是python执行过程中,遇到一个变量名时查找变量名的所在位置
+   的顺序
+   LEGB
+   本地作用域(Local)
+   外部嵌套函数作用域(Enclosing Locals)
+   全局/模块作用域(Global)
+   内置作用域(Built-in)
+   python中一个变量的作用域是由赋值语句执行的位置来决定的
+
+3. 谈谈对闭包的理解？
+   闭包(closure)是一个重要的语法结构,它能提高代码的重用性
+    闭包必须满足三个条件
+     内嵌函数
+     变量
+     外部函数要返回内嵌函数
+     当一个内嵌函数引用其外部嵌套函数的变量就形成一个闭包
+     闭包的缺点是占用内存较多
+
+4. Python 里的拷贝？理解引用和 copy(),deepcopy()的区别。
+   直接赋值是引用
+
+5. Python 垃圾回收机制？
+  1.主要使用引用计数(reference counting)来跟踪和
+  回收垃圾
+  l=[1,2,3]    # 此时引用计数为1
+  l2=l         # [1,2,3]的引用计数为2
+  l3=[1,2,l]   # [1,2,3]的引用计数为3
+  del l l2 l3  # [1,2,3]的引用计数为0
+  2.在引用计数的基础上,通过标记-清除(mark and sweep)解除
+  容器对象可能产生的循环引用问题
+  l1=[1,2]
+  l2=[3,4]
+  l1.append(l2)
+  l2.append(l1)
+  del l1 l2
+  3.分代回收(generation collection)以空间换时间的方法
+    提高垃圾回收的速度
+
+6. 什么是 lambda 函数？它有什么好处?
+  首要用途是定义简单,短小的 回调函数
+  好处:
+    不用定义变量名
+    用完后即被释放
+
+7. 请写出一段 Python 代码实现删除一个 list 里面的重复元素？
+l=[1,2,3,4,2,3,4,3,4,2]
+l2=list(set(l))
+
+8. Python 里面如何拷贝一个对象？（赋值，浅拷贝，深拷贝的区别）
+
+9. 介绍一下 except 的用法和作用？
+  捕获异常,把程序从异常流程转为正常流程并继续执行
+  描述 
+   except  子句
+   else    子句
+   finally 子句
+10. Python 里面如何生成随机数？
+  random 模块
+    模块里有 random 函数 生成0~1的实数
+    random(a,b)  生成a~b的整数
+    uniform(a,b) 生成a~b的浮点数
+    randrang(start,stop,step)
+    ...
+
+11. 如何在一个 function 里面设置一个全局的变量？
+   解决办法是在function里的赋值语句之前加一条global 语句
+     def f():
+       Global x
+       X=100
+    
+12. 单引号，双引号，三引号的区别?
+  单引号内可以放双引号
+  双引号内可以放单引号
+  三引号内可以放单引和双引,三引号的折行会自动转换为换行符'\n'
+
+13. 下面代码会输出什么：
+def f(x,l=[]):
+    for i in range(x):
+        l.append(i*i)
+    print l
+f(2)           # 0 1
+f(3,[3,2,1])   # 3 2 1 0 1
+f(3)           # 0 1 0 1 4
+python中 函数的缺省参数绑定的对象会跟随函数一直存在,当
+参数不够时,会用缺省参数绑定的对象传参
+
+14. 这两个参数是什么意思：*args，**kwargs？我们为什么要使用它们？\
+  当需要写一个函数,但并不确定用户在调用时需要多少个实参时可以
+  使用上述的定义方式
+  不管调用者传入多少个位置参数都会放于args绑定的元组中
+  不管调用者传入多少个关键字参数都会放在kwargs绑定的字典中
+  args 和 kwargs 时约定的名字,可以换为 a,b等
+
+15. 简要描述 Python 的垃圾回收机制（garbage collection）。 
+
+16. 简述函数式编程
+  在函数式编程中,函数是基本单位,除类匿名函数,python中
+  还常使用filter,map,reduce,apply等函数
+  来支持函数式编程
+  (import functools)
+
+17. 什么是匿名函数，匿名函数有什么局限性？
+  lambda  局限性就是不能写多条语句 没有名字
+  
+18. 如何捕获异常，常用的异常机制有哪些？
+19. 去除列表中的重复元素？
+20. Python 中 list 和 tuples 的差别是什么？
+21. 代码举例什么是 decorator。
